@@ -2,7 +2,7 @@
 
 1. Спроектировать структуру БД для хранения информации о марках, моделях, водителях и самих автомобилях.
 
-   ![ER_scheme_kirov_transport_tax](https://github.com/elisaveta9/KirovTransportTax/assets/89607033/51e9a02f-bfd6-43cd-8826-9b463b00ce2f)
+   ![ER_scheme_kirov_transport_tax](https://github.com/elisaveta9/KirovTransportTax/assets/89607033/c0781694-129a-4b78-9f98-21cd7dfb78b9)
    
    *ER-схема БД*
 
