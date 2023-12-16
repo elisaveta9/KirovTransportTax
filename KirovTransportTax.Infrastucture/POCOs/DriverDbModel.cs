@@ -2,7 +2,7 @@
 namespace KirovTransportTax.Infrastucture.POCOs
 {
     [Table("driver")]
-    public class Driver
+    public class DriverDbModel
     {
         [Column(Name = "passport"), PrimaryKey, NotNull]
         public string Passport { get; set; }

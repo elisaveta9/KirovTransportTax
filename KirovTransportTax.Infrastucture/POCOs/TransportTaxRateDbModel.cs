@@ -3,13 +3,13 @@
 namespace KirovTransportTax.Infrastucture.POCOs
 {
     [Table("transport_tax_rate")]
-    public class TransportTaxRate
+    public class TransportTaxRateDbModel
     {
         [Column(Name = "id"), PrimaryKey, NotNull]
         public int Id { get; set; }
 
         [Column(Name = "transport_type"), NotNull]
-        [Association(ThisKey = nameof(Type), OtherKey = nameof(TransportType.Type))]
+        [Association(ThisKey = nameof(Type), OtherKey = nameof(TransportTypeDbModel.Type))]
         public string Type { get; set; }
 
         [Column(Name = "min_horsepower"), NotNull]
