@@ -3,11 +3,22 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.7.34024.191
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "KirovTransportTax.API", "KirovTransportTax.API\KirovTransportTax.API.csproj", "{DFFB922F-4B2A-4D3E-A083-327A91E54C3A}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "KirovTransportTax.API", "KirovTransportTax.API\KirovTransportTax.API.csproj", "{DFFB922F-4B2A-4D3E-A083-327A91E54C3A}"
+	ProjectSection(ProjectDependencies) = postProject
+		{E88D94A6-2A2B-447A-8B27-D34C6F3C596E} = {E88D94A6-2A2B-447A-8B27-D34C6F3C596E}
+	EndProjectSection
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "KirovTransportTax.Domain", "KirovTransportTax.Domain\KirovTransportTax.Domain.csproj", "{AC948816-FA39-4A18-9E3A-05D7EC089054}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "KirovTransportTax.Infrastucture", "KirovTransportTax.Infrastucture\KirovTransportTax.Infrastucture.csproj", "{62A3A170-5761-47E1-B911-7784F9E5268E}"
+	ProjectSection(ProjectDependencies) = postProject
+		{7B8CC05F-0B65-4406-9AEF-B119608035B3} = {7B8CC05F-0B65-4406-9AEF-B119608035B3}
+		{E88D94A6-2A2B-447A-8B27-D34C6F3C596E} = {E88D94A6-2A2B-447A-8B27-D34C6F3C596E}
+	EndProjectSection
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "KirovTransportTax.Infrastucture", "KirovTransportTax.Infrastucture\KirovTransportTax.Infrastucture.csproj", "{62A3A170-5761-47E1-B911-7784F9E5268E}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "KirovTransportTax.Application", "KirovTransportTax.Application\KirovTransportTax.Application.csproj", "{E88D94A6-2A2B-447A-8B27-D34C6F3C596E}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "KirovTransportTax.Core", "KirovTransportTax.Core\KirovTransportTax.Core.csproj", "{7B8CC05F-0B65-4406-9AEF-B119608035B3}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Main", "Main\Main.csproj", "{6156561B-1377-4BEF-8686-AFA103555B75}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -19,14 +30,22 @@ Global
 		{DFFB922F-4B2A-4D3E-A083-327A91E54C3A}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{DFFB922F-4B2A-4D3E-A083-327A91E54C3A}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{DFFB922F-4B2A-4D3E-A083-327A91E54C3A}.Release|Any CPU.Build.0 = Release|Any CPU
-		{AC948816-FA39-4A18-9E3A-05D7EC089054}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{AC948816-FA39-4A18-9E3A-05D7EC089054}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{AC948816-FA39-4A18-9E3A-05D7EC089054}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{AC948816-FA39-4A18-9E3A-05D7EC089054}.Release|Any CPU.Build.0 = Release|Any CPU
 		{62A3A170-5761-47E1-B911-7784F9E5268E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{62A3A170-5761-47E1-B911-7784F9E5268E}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{62A3A170-5761-47E1-B911-7784F9E5268E}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{62A3A170-5761-47E1-B911-7784F9E5268E}.Release|Any CPU.Build.0 = Release|Any CPU
+		{E88D94A6-2A2B-447A-8B27-D34C6F3C596E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{E88D94A6-2A2B-447A-8B27-D34C6F3C596E}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{E88D94A6-2A2B-447A-8B27-D34C6F3C596E}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{E88D94A6-2A2B-447A-8B27-D34C6F3C596E}.Release|Any CPU.Build.0 = Release|Any CPU
+		{7B8CC05F-0B65-4406-9AEF-B119608035B3}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{7B8CC05F-0B65-4406-9AEF-B119608035B3}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{7B8CC05F-0B65-4406-9AEF-B119608035B3}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{7B8CC05F-0B65-4406-9AEF-B119608035B3}.Release|Any CPU.Build.0 = Release|Any CPU
+		{6156561B-1377-4BEF-8686-AFA103555B75}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{6156561B-1377-4BEF-8686-AFA103555B75}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{6156561B-1377-4BEF-8686-AFA103555B75}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{6156561B-1377-4BEF-8686-AFA103555B75}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
