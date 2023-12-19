@@ -1,6 +1,4 @@
-﻿using KirovTransportTax.Domain.Entities;
-
-namespace KirovTransportTax.Core.Entities
+﻿namespace KirovTransportTax.Domain.Entities
 {
     public class Transport
     {

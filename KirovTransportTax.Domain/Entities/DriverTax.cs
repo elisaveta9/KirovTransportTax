@@ -1,4 +1,4 @@
-﻿namespace KirovTransportTax.Core.Entities
+﻿namespace KirovTransportTax.Domain.Entities
 {
     public class DriverTax
     {
