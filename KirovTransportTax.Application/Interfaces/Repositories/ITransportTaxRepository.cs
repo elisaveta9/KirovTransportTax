@@ -1,6 +1,6 @@
 ﻿using KirovTransportTax.Core.Entities;
 
-namespace KirovTransportTax.Application.Interfaces
+namespace KirovTransportTax.Application.Interfaces.Repositories
 {
     public interface ITransportTaxRepository : IRepository<TransportTax>
     {

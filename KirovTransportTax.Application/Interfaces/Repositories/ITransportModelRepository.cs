@@ -1,14 +1,15 @@
 ﻿using KirovTransportTax.Domain.Entities;
 
-namespace KirovTransportTax.Application.Interfaces
+namespace KirovTransportTax.Application.Interfaces.Repositories
 {
     public interface ITransportModelRepository : IRepository<TransportModel>
     {
-        Task Create(TransportModel entity);
+        Task<int> Create(TransportModel entity);
         void Delete(TransportModel entity);
+        void DeleteByModel(string modelPK);
         void Update(TransportModel entity);
         void Update(string oldModelPK, TransportModel entity);
 
-        Task<IEnumerable<TransportModel>> GetModel(string modelPK);
+        Task<TransportModel> GetModel(string modelPK);
     }
 }

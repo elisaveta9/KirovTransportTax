@@ -1,14 +1,15 @@
 ﻿using KirovTransportTax.Domain.Entities;
 
-namespace KirovTransportTax.Application.Interfaces
+namespace KirovTransportTax.Application.Interfaces.Repositories
 {
     public interface IDriverRepository : IRepository<Driver>
     {
-        Task Create(Driver entity);
+        Task<int> Create(Driver entity);
         void Delete(Driver entity);
+        void DeleteByPassport(string passportPK);
         void Update(Driver entity);
         void Update(string oldPassportPK, Driver entity);
 
-        Task<IEnumerable<Driver>> GetByPassport(string passportPK);
+        Task<Driver> GetByPassport(string passportPK);
     }
 }
