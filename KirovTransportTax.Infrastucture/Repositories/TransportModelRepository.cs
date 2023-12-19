@@ -8,11 +8,16 @@ namespace KirovTransportTax.Infrastucture.Repositories
 {
     internal class TransportModelRepository : ITransportModelRepository
     {
-        private readonly TransportDbConnection dbContext = new();
+        private readonly TransportDbConnection dbContext;
         private readonly Mapper mapper = new(new MapperConfiguration(cnf =>
         {
             cnf.CreateMap<TransportModel, TransportModelDbModel>();
         }));
+
+        public TransportModelRepository(TransportDbConnection dbContext)
+        {
+            this.dbContext = dbContext;
+        }
 
         public void BeginTransaction()
         {

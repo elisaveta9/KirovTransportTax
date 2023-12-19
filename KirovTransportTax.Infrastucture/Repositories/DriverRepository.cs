@@ -8,11 +8,16 @@ namespace KirovTransportTax.Infrastucture.Repositories
 {
     internal class DriverRepository : IDriverRepository
     {
-        private readonly TransportDbConnection dbContext = new();
+        private readonly TransportDbConnection dbContext;
         private readonly Mapper mapper = new(new MapperConfiguration(cnf =>
         {
             cnf.CreateMap<Driver, DriverDbModel>();
         }));
+
+        public DriverRepository(TransportDbConnection dbContext)
+        {
+            this.dbContext = dbContext;
+        }
 
         public void BeginTransaction()
         {
