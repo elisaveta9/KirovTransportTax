@@ -12,9 +12,9 @@ namespace KirovTransportTax.Infrastucture
                 "Port=5436;Database=kirov_transport_tax;User ID=postgres;Password=student;")) { }
         public TransportDbConnection(DataOptions dataOptions) : base(dataOptions) { } 
 
-        public ITable<BrandDbModel> brandDbs => this.GetTable<BrandDbModel>();
-        public ITable<DriverDbModel> driverDbs => this.GetTable<DriverDbModel>();
-        public ITable<TransportDbModel> transportDb => this.GetTable<TransportDbModel>();
-        public ITable<TransportModelDbModel> transportModelDbs => this.GetTable<TransportModelDbModel>();
+        public ITable<BrandDbModel> BrandDbs => this.GetTable<BrandDbModel>();
+        public ITable<DriverDbModel> DriverDbs => this.GetTable<DriverDbModel>();
+        public ITable<TransportDbModel> TransportDb => this.GetTable<TransportDbModel>();
+        public ITable<TransportModelDbModel> TransportModelDbs => this.GetTable<TransportModelDbModel>();
     }
 }
