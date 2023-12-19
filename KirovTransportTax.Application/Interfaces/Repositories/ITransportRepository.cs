@@ -7,7 +7,7 @@ namespace KirovTransportTax.Application.Interfaces.Repositories
         Task<int> Create(Transport entity);
         void Delete(Transport entity);
         void DeleteByNumber(string numberTransporPK);
-        void DeleteByPssport(string passportFK);
+        void DeleteByPassport(string passportFK);
         void Update(Transport entity);
         void Update(string oldNumberTransporPK, Transport entity);
 

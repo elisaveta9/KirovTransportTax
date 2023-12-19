@@ -46,7 +46,7 @@ namespace KirovTransportTax.Infrastucture.Repositories
                 .DeleteAsync();
         }
 
-        public async void DeleteByPssport(string passportFK)
+        public async void DeleteByPassport(string passportFK)
         {
             await dbContext.TransportDb
                 .Where(t => t.DriverPassport.Equals(passportFK))
