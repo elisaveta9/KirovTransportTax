@@ -18,7 +18,7 @@ namespace KirovTransportTax.Infrastucture.POCOs
         public int MinHorsepower { get; set; }
 
         [Column(Name = "max_horsepower"), NotNull]
-        public int MaxHorsepower { get; set; }
+        public int? MaxHorsepower { get; set; }
 
         [Column(Name = "tax_rate"), NotNull]
         public int TaxRate { get; set; }

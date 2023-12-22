@@ -3,6 +3,7 @@ using KirovTransportTax.Application.Interfaces.Repositories;
 using KirovTransportTax.Domain.Entities;
 using KirovTransportTax.Infrastucture.POCOs;
 using LinqToDB;
+using Npgsql;
 
 namespace KirovTransportTax.Infrastucture.Repositories
 {
@@ -35,9 +36,17 @@ namespace KirovTransportTax.Infrastucture.Repositories
 
         public async Task<int> Create(Driver entity)
         {
-            var model = mapperFrom.Map<DriverDbModel>(entity);
-            return await dbContext
-                .InsertAsync(model);
+            try
+            {
+                var model = mapperFrom.Map<DriverDbModel>(entity);
+                return await dbContext
+                    .InsertAsync(model);
+            } catch (NpgsqlException ex)
+            {
+                if (ex.SqlState == "23505")
+                    return 0;
+                throw;
+            }
         }
 
         public async Task<int> Delete(Driver entity)

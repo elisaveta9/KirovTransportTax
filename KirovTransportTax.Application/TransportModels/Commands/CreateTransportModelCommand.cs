@@ -14,7 +14,13 @@ namespace KirovTransportTax.Application.TransportModels.Commands
 
         public bool Execute(TransportModel transportModel)
         {
-            return _transportModelRepository.Create(transportModel).Result != 0;
+            try
+            {
+                return _transportModelRepository.Create(transportModel).Result != 0;
+            } catch
+            {
+                return false;
+            }
         }
     }
 }

@@ -27,7 +27,7 @@ namespace KirovTransportTax.Infrastucture.Repositories
         {
             var tr = dbContext.TransportTaxRateDbs.ToList();
             var transportInfo = from t in dbContext.TransportDb
-                                 join tm in dbContext.TransportModelDbs on t.Model equals tm.Model
+                                from tm in dbContext.TransportModelDbs.Where(tm => t.Model.Equals(tm.Model))
                                  select new
                                  {
                                      t.NumberTransport,
@@ -39,9 +39,9 @@ namespace KirovTransportTax.Infrastucture.Repositories
                                                                                     12 - t.RegistrationDate.Month + 1
                                  };
             var taxInfo = from ti in transportInfo
-                          from ttr in dbContext.TransportTaxRateDbs.Where(ttr => ti.TransportType.Equals(ttr.Type)
-                          && ti.Horsepower > ttr.MinHorsepower && 
-                          (ttr.MaxHorsepower == 0 || ti.Horsepower <= ttr.MaxHorsepower))
+                          join ttr in dbContext.TransportTaxRateDbs on ti.TransportType equals ttr.Type
+                          where (ti.Horsepower > ttr.MinHorsepower &&
+                          (ttr.MaxHorsepower == null || ti.Horsepower <= ttr.MaxHorsepower))
                            select new TransportTax
                            {
                                NumberTransport = ti.NumberTransport,
@@ -73,9 +73,9 @@ namespace KirovTransportTax.Infrastucture.Repositories
             if (transport == null)
                 return null;
             var taxInfo = from ti in transportInfo
-                          from ttr in dbContext.TransportTaxRateDbs.Where(ttr => ti.TransportType.Equals(ttr.Type)
-                          && ti.Horsepower > ttr.MinHorsepower &&
-                          (ttr.MaxHorsepower == 0 || ti.Horsepower <= ttr.MaxHorsepower))
+                          join ttr in dbContext.TransportTaxRateDbs on ti.TransportType equals ttr.Type
+                          where (ti.Horsepower > ttr.MinHorsepower &&
+                          (ttr.MaxHorsepower == null || ti.Horsepower <= ttr.MaxHorsepower))
                           select new TransportTax
                           {
                               NumberTransport = ti.NumberTransport,

@@ -16,9 +16,8 @@ namespace KirovTransportTax.Application.Brands.Commands
         {
             try
             {
-                var addedRows = _brandRepository.Create(brand);
-                return addedRows.Result == 1;
-            } catch 
+                return _brandRepository.Create(brand).Result != 0;
+            } catch
             {
                 return false;
             }

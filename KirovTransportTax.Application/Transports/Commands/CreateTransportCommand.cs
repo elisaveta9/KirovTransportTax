@@ -58,18 +58,14 @@ namespace KirovTransportTax.Application.Transports.Commands
 
         public bool Execute(CreateTransportDto transport)
         {
-            transportRepository.BeginTransaction();
-            try
-            {                
+            try { 
                 createBrandCommand.Execute(mapperBrand.Value.Map<Brand>(transport));
                 createTransportModelCommand.Execute(mapperTransportModel.Value.Map<TransportModel>(transport));
                 createDriverCommand.Execute(mapperDriver.Value.Map<Driver>(transport));
                 var result = Execute(mapperTransport.Value.Map<Transport>(transport));
-                transportRepository.CommitTransaction();
                 return result;
             } catch
             {
-                transportRepository.RollbackTransaction();
                 return false;
             }
         }

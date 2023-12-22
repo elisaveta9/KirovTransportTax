@@ -38,9 +38,9 @@ namespace KirovTransportTax.Infrastucture.Repositories
                                                                                    12 - t.RegistrationDate.Month + 1
                                 };
             var taxInfo = from ti in transportInfo
-                          from ttr in dbContext.TransportTaxRateDbs.Where(ttr => ti.TransportType.Equals(ttr.Type)
-                          && ti.Horsepower > ttr.MinHorsepower &&
-                          (ttr.MaxHorsepower == 0 || ti.Horsepower <= ttr.MaxHorsepower))
+                          join ttr in dbContext.TransportTaxRateDbs on ti.TransportType equals ttr.Type
+                          where (ti.Horsepower > ttr.MinHorsepower &&
+                          (ttr.MaxHorsepower == null || ti.Horsepower <= ttr.MaxHorsepower))
                           select new TransportTax
                           {
                               NumberTransport = ti.NumberTransport,
@@ -79,9 +79,9 @@ namespace KirovTransportTax.Infrastucture.Repositories
             if (transportInfo == null)
                 return null;
             var taxInfo = from ti in transportInfo
-                          from ttr in dbContext.TransportTaxRateDbs.Where(ttr => ti.TransportType.Equals(ttr.Type)
-                          && ti.Horsepower > ttr.MinHorsepower &&
-                          (ttr.MaxHorsepower == 0 || ti.Horsepower <= ttr.MaxHorsepower))
+                          join ttr in dbContext.TransportTaxRateDbs on ti.TransportType equals ttr.Type
+                          where (ti.Horsepower > ttr.MinHorsepower &&
+                          (ttr.MaxHorsepower == null || ti.Horsepower <= ttr.MaxHorsepower))
                           select new TransportTax
                           {
                               NumberTransport = ti.NumberTransport,
