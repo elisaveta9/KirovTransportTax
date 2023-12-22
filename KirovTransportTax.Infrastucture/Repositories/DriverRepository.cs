@@ -6,12 +6,16 @@ using LinqToDB;
 
 namespace KirovTransportTax.Infrastucture.Repositories
 {
-    internal class DriverRepository : IDriverRepository
+    public class DriverRepository : IDriverRepository
     {
         private readonly TransportDbConnection dbContext;
-        private readonly Mapper mapper = new(new MapperConfiguration(cnf =>
+        private readonly Mapper mapperFrom = new(new MapperConfiguration(cnf =>
         {
             cnf.CreateMap<Driver, DriverDbModel>();
+        }));
+        private readonly Mapper mapperTo = new(new MapperConfiguration(cnf =>
+        {
+            cnf.CreateMap<DriverDbModel, Driver>();
         }));
 
         public DriverRepository(TransportDbConnection dbContext)
@@ -31,24 +35,22 @@ namespace KirovTransportTax.Infrastucture.Repositories
 
         public async Task<int> Create(Driver entity)
         {
-            var model = mapper.Map<DriverDbModel>(entity);
-            var addedRows = await dbContext.DriverDbs
-                .Value(d => d, model)
-                .InsertAsync();
-            return addedRows;
+            var model = mapperFrom.Map<DriverDbModel>(entity);
+            return await dbContext
+                .InsertAsync(model);
         }
 
-        public async void Delete(Driver entity)
+        public async Task<int> Delete(Driver entity)
         {
-            var model = mapper.Map<DriverDbModel>(entity);
-            await dbContext.DriverDbs
+            var model = mapperFrom.Map<DriverDbModel>(entity);
+            return await dbContext.DriverDbs
                 .Where(d => d.Equals(model))
                 .DeleteAsync();
         }
 
-        public async void DeleteByPassport(string passportPK)
+        public async Task<int> DeleteByPassport(string passportPK)
         {
-            await dbContext.DriverDbs
+            return await dbContext.DriverDbs
                 .Where(d => d.Passport.Equals(passportPK))
                 .DeleteAsync();
         }
@@ -56,7 +58,7 @@ namespace KirovTransportTax.Infrastucture.Repositories
         public async Task<IEnumerable<Driver>> GetAll()
         {
             var drivers = await dbContext.DriverDbs.ToListAsync();
-            return drivers.ConvertAll(d => mapper.Map<Driver>(d));
+            return drivers.ConvertAll(d => mapperTo.Map<Driver>(d));
         }
 
         public async Task<Driver> GetByPassport(string passportPK)
@@ -64,7 +66,7 @@ namespace KirovTransportTax.Infrastucture.Repositories
             var driver = await dbContext.DriverDbs
                 .Where(d => d.Passport.Equals(passportPK))
                 .FirstOrDefaultAsync();
-            return mapper.Map<Driver>(driver);
+            return mapperTo.Map<Driver>(driver);
         }
 
         public void RollbackTransaction()
@@ -72,15 +74,15 @@ namespace KirovTransportTax.Infrastucture.Repositories
             dbContext.RollbackTransaction();
         }
 
-        public async void Update(Driver entity)
+        public async Task<int> Update(Driver entity)
         {
-            var model = mapper.Map<DriverDbModel>(entity);
-            await dbContext.UpdateAsync(model);
+            var model = mapperFrom.Map<DriverDbModel>(entity);
+            return await dbContext.UpdateAsync(model);
         }
 
-        public async void Update(string oldPassportPK, Driver entity)
+        public async Task<int> Update(string oldPassportPK, Driver entity)
         {
-            var model = mapper.Map<DriverDbModel>(entity);
+            var model = mapperFrom.Map<DriverDbModel>(entity);
             BeginTransaction();
             try
             {
@@ -88,11 +90,13 @@ namespace KirovTransportTax.Infrastucture.Repositories
                     .Where(d => d.Passport.Equals(oldPassportPK))
                     .Set(d => d.Passport, entity.Passport)
                     .UpdateAsync();
-                await dbContext.UpdateAsync(model);
+                var updatesRows = await dbContext.UpdateAsync(model);
                 CommitTransaction();
+                return updatesRows;
             } catch
             {
                 RollbackTransaction();
+                return 0;
             }
         }
     }

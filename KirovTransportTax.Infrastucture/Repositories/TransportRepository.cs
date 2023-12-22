@@ -6,12 +6,16 @@ using LinqToDB;
 
 namespace KirovTransportTax.Infrastucture.Repositories
 {
-    internal class TransportRepository : ITransportRepository
+    public class TransportRepository : ITransportRepository
     {
         private readonly TransportDbConnection dbContext;
-        private readonly Mapper mapper = new(new MapperConfiguration(cnf =>
+        private readonly Mapper mapperFrom = new(new MapperConfiguration(cnf =>
         {
             cnf.CreateMap<Transport, TransportDbModel>();
+        }));
+        private readonly Mapper mapperTo = new(new MapperConfiguration(cnf =>
+        {
+            cnf.CreateMap<TransportDbModel, Transport>();
         }));
 
         public TransportRepository(TransportDbConnection dbContext)
@@ -31,29 +35,26 @@ namespace KirovTransportTax.Infrastucture.Repositories
 
         public async Task<int> Create(Transport entity)
         {
-            var model = mapper.Map<TransportDbModel>(entity);
-            var addedRows = await dbContext.TransportDb
-                .Value(t => t, model)
-                .InsertAsync();
-            return addedRows;
+            var model = mapperFrom.Map<TransportDbModel>(entity);
+            return await dbContext.InsertAsync(model);
         }
 
-        public async void Delete(Transport entity)
+        public async Task<int> Delete(Transport entity)
         {
-            var model = mapper.Map<TransportDbModel>(entity);
-            await dbContext.DeleteAsync(model);
+            var model = mapperFrom.Map<TransportDbModel>(entity);
+            return await dbContext.DeleteAsync(model);
         }
 
-        public async void DeleteByNumber(string numberTransporPK)
+        public async Task<int> DeleteByNumber(string numberTransporPK)
         {
-            await dbContext.TransportDb
+            return await dbContext.TransportDb
                 .Where(t => t.NumberTransport.Equals(numberTransporPK))
                 .DeleteAsync();
         }
 
-        public async void DeleteByPassport(string passportFK)
+        public async Task<int> DeleteByPassport(string passportFK)
         {
-            await dbContext.TransportDb
+            return await dbContext.TransportDb
                 .Where(t => t.DriverPassport.Equals(passportFK))
                 .DeleteAsync();
         }
@@ -61,7 +62,7 @@ namespace KirovTransportTax.Infrastucture.Repositories
         public async Task<IEnumerable<Transport>> GetAll()
         {
             var transports = await dbContext.TransportDb.ToListAsync();
-            return transports.ConvertAll(t => mapper.Map<Transport>(t));
+            return transports.ConvertAll(t => mapperTo.Map<Transport>(t));
         }
 
         public async Task<Transport> GetByNumber(string numberTransporPK)
@@ -69,7 +70,7 @@ namespace KirovTransportTax.Infrastucture.Repositories
             var transport = await dbContext.TransportDb
                 .Where(t => t.NumberTransport.Equals(numberTransporPK))
                 .FirstOrDefaultAsync();
-            return mapper.Map<Transport>(transport);
+            return mapperTo.Map<Transport>(transport);
         }
 
         public async Task<IEnumerable<Transport>> GetByPassport(string passportFK)
@@ -77,7 +78,7 @@ namespace KirovTransportTax.Infrastucture.Repositories
             var transports = await dbContext.TransportDb
                 .Where(t => t.DriverPassport.Equals(passportFK))
                 .ToListAsync();
-            return transports.ConvertAll(t => mapper.Map<Transport>(t));
+            return transports.ConvertAll(t => mapperTo.Map<Transport>(t));
         }
 
         public void RollbackTransaction()
@@ -85,15 +86,15 @@ namespace KirovTransportTax.Infrastucture.Repositories
             dbContext.RollbackTransaction();
         }
 
-        public async void Update(Transport entity)
+        public async Task<int> Update(Transport entity)
         {
-            var model = mapper.Map<TransportDbModel>(entity);
-            await dbContext.UpdateAsync(model);
+            var model = mapperFrom.Map<TransportDbModel>(entity);
+            return await dbContext.UpdateAsync(model);
         }
 
-        public async void Update(string oldNumberTransporPK, Transport entity)
+        public async Task<int> Update(string oldNumberTransporPK, Transport entity)
         {
-            var model = mapper.Map<TransportDbModel>(entity);
+            var model = mapperFrom.Map<TransportDbModel>(entity);
             BeginTransaction();
             try
             {
@@ -101,11 +102,13 @@ namespace KirovTransportTax.Infrastucture.Repositories
                     .Where(t => t.NumberTransport.Equals(oldNumberTransporPK))
                     .Set(t => t.NumberTransport, model.NumberTransport)
                     .UpdateAsync();
-                await dbContext.UpdateAsync(model);
+                var updatedRows = await dbContext.UpdateAsync(model);
                 CommitTransaction();
+                return updatedRows;
             } catch
             {
                 RollbackTransaction();
+                return 0;
             }
         }
     }

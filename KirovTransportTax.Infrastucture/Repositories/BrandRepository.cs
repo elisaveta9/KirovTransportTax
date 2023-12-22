@@ -6,12 +6,16 @@ using LinqToDB;
 
 namespace KirovTransportTax.Infrastucture.Repositories
 {
-    internal class BrandRepository : IBrandRepository
+    public class BrandRepository : IBrandRepository
     {
         private readonly TransportDbConnection dbContext;
-        private readonly Mapper mapper = new(new MapperConfiguration(cnf =>
+        private readonly Mapper mapperFrom = new(new MapperConfiguration(cnf =>
         {
-            cnf.CreateMap<Driver, DriverDbModel>();
+            cnf.CreateMap<Brand, BrandDbModel>();
+        }));
+        private readonly Mapper mapperTo = new(new MapperConfiguration(cnf =>
+        {
+            cnf.CreateMap<BrandDbModel, Brand>();
         }));
 
         public BrandRepository(TransportDbConnection dbContext)
@@ -31,23 +35,22 @@ namespace KirovTransportTax.Infrastucture.Repositories
 
         public async Task<int> Create(Brand entity)
         {
-            var model = mapper.Map<BrandDbModel>(entity);
-            var addedRows = await dbContext.BrandDbs
-                .Value(b => b, model)
-                .InsertAsync();
+            var model = mapperFrom.Map<BrandDbModel>(entity);
+            var addedRows = await dbContext
+                .InsertAsync(model);
             return addedRows;
         }
 
-        public async void Delete(Brand entity)
+        public async Task<int> Delete(Brand entity)
         {
-            var model = mapper.Map<BrandDbModel>(entity);
-            await dbContext.DeleteAsync(model);
+            var model = mapperFrom.Map<BrandDbModel>(entity);
+            return await dbContext.DeleteAsync(model);
         }
 
         public async Task<IEnumerable<Brand>> GetAll()
         {
             var brands = await dbContext.BrandDbs.ToListAsync();
-            return brands.ConvertAll(b => mapper.Map<Brand>(b));
+            return brands.ConvertAll(b => mapperTo.Map<Brand>(b));
         }
 
         public void RollbackTransaction()
@@ -55,9 +58,9 @@ namespace KirovTransportTax.Infrastucture.Repositories
             dbContext.RollbackTransaction();
         }
 
-        public async void Update(string oldBrandPK, Brand entity)
+        public async Task<int> Update(string oldBrandPK, Brand entity)
         {
-            await dbContext.BrandDbs
+            return await dbContext.BrandDbs
                 .Where(b => b.Name.Equals(oldBrandPK))
                 .Set(b => b.Name, entity.Name)
                 .UpdateAsync();

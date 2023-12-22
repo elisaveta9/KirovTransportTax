@@ -6,12 +6,20 @@ using LinqToDB;
 
 namespace KirovTransportTax.Infrastucture.Repositories
 {
-    internal class TransportModelRepository : ITransportModelRepository
+    public class TransportModelRepository : ITransportModelRepository
     {
         private readonly TransportDbConnection dbContext;
-        private readonly Mapper mapper = new(new MapperConfiguration(cnf =>
+        private readonly Mapper mapperFrom = new(new MapperConfiguration(cnf =>
         {
-            cnf.CreateMap<TransportModel, TransportModelDbModel>();
+            cnf.CreateMap<TransportModel, TransportModelDbModel>()
+            .ForMember(nameof(TransportModelDbModel.BrandName), opt => opt.MapFrom(src => src.Brand))
+            .ForMember(nameof(TransportModelDbModel.Type), opt => opt.MapFrom(src => src.TransportType));
+        }));
+        private readonly Mapper mapperTo = new(new MapperConfiguration(cnf =>
+        {
+            cnf.CreateMap<TransportModelDbModel, TransportModel>()
+            .ForMember(nameof(TransportModel.Brand), opt => opt.MapFrom(src => src.BrandName))
+            .ForMember(nameof(TransportModel.TransportType), opt => opt.MapFrom(src => src.Type));
         }));
 
         public TransportModelRepository(TransportDbConnection dbContext)
@@ -31,32 +39,37 @@ namespace KirovTransportTax.Infrastucture.Repositories
 
         public async Task<int> Create(TransportModel entity)
         {
-            var model = mapper.Map<TransportModelDbModel>(entity);
-            var addedRows = await dbContext.TransportModelDbs
-                .Value(tm => tm, model)
-                .InsertAsync();
-            return addedRows;
+            //var model = mapperFrom.Map<TransportModelDbModel>(entity);
+            var model = new TransportModelDbModel
+            {
+                Model = entity.Model,
+                BrandName = entity.Brand,
+                Horsepower = entity.Horsepower,
+                ReleaseYear = entity.ReleaseYear,
+                Type = entity.TransportType
+            };
+            return await dbContext.InsertAsync(model);
         }
 
-        public async void Delete(TransportModel entity)
+        public async Task<int> Delete(TransportModel entity)
         {
-            var model = mapper.Map<TransportModelDbModel>(entity);
-            await dbContext.TransportModelDbs
+            var model = mapperFrom.Map<TransportModelDbModel>(entity);
+            return await dbContext.TransportModelDbs
                 .Where(tm => tm.Equals(model))
                 .DeleteAsync();
         }
 
-        public async void DeleteByModel(string modelPK)
+        public async Task<int> DeleteByModel(string modelPK)
         {
-            await dbContext.TransportModelDbs
+            return await dbContext.TransportModelDbs
                 .Where(tm => tm.Model.Equals(modelPK))
                 .DeleteAsync();
         }
 
         public async Task<IEnumerable<TransportModel>> GetAll()
         {
-            var transportModels = await dbContext.TransportModelDbs.ToListAsync();
-            return transportModels.ConvertAll(tm => mapper.Map<TransportModel>(tm));
+            var models = await dbContext.TransportModelDbs.ToListAsync();
+            return models.ConvertAll(m => mapperTo.Map<TransportModel>(m));
         }
 
         public async Task<TransportModel> GetModel(string modelPK)
@@ -64,7 +77,7 @@ namespace KirovTransportTax.Infrastucture.Repositories
             var transportModel = await dbContext.TransportModelDbs
                 .Where(tm => tm.Model.Equals(modelPK))
                 .FirstOrDefaultAsync();
-            return mapper.Map<TransportModel>(transportModel);
+            return mapperTo.Map<TransportModel>(transportModel);
         }
 
         public void RollbackTransaction()
@@ -72,15 +85,15 @@ namespace KirovTransportTax.Infrastucture.Repositories
             dbContext.RollbackTransaction();
         }
 
-        public async void Update(TransportModel entity)
+        public async Task<int> Update(TransportModel entity)
         {
-            var model = mapper.Map<TransportModelDbModel>(entity);
-            await dbContext.UpdateAsync(model);
+            var model = mapperFrom.Map<TransportModelDbModel>(entity);
+            return await dbContext.UpdateAsync(model);
         }
 
-        public async void Update(string oldModelPK, TransportModel entity)
+        public async Task<int> Update(string oldModelPK, TransportModel entity)
         {
-            var model = mapper.Map<TransportModelDbModel>(entity);
+            var model = mapperFrom.Map<TransportModelDbModel>(entity);
             BeginTransaction();
             try
             {
@@ -88,11 +101,13 @@ namespace KirovTransportTax.Infrastucture.Repositories
                     .Where(tm => tm.Model.Equals(oldModelPK))
                     .Set(tm => tm.Model, model.Model)
                     .UpdateAsync();
-                await dbContext.UpdateAsync(model);
+                var updatedRows = await dbContext.UpdateAsync(model);
                 CommitTransaction();
+                return updatedRows;
             } catch
             {
                 RollbackTransaction();
+                return 0;
             }
         }
     }
