@@ -7,8 +7,16 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <PackageReference Include="linq2db" Version="5.3.2" />
+    <PackageReference Include="linq2db.AspNet" Version="5.3.2" />
     <PackageReference Include="Microsoft.AspNetCore.Authentication.Negotiate" Version="6.0.20" />
+    <PackageReference Include="Microsoft.VisualStudio.Web.CodeGeneration.Design" Version="6.0.16" />
     <PackageReference Include="Swashbuckle.AspNetCore" Version="6.5.0" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\KirovTransportTax.Application\KirovTransportTax.Application.csproj" />
+    <ProjectReference Include="..\KirovTransportTax.Infrastucture\KirovTransportTax.Infrastucture.csproj" />
   </ItemGroup>
 
 </Project>
