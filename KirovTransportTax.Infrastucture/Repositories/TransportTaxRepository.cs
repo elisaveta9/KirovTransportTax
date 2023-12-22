@@ -31,7 +31,7 @@ namespace KirovTransportTax.Infrastucture.Repositories
                                  select new
                                  {
                                      t.NumberTransport,
-                                     tm.Type,
+                                     tm.TransportType,
                                      t.DriverPassport,
                                      tm.Horsepower,
                                      PeriodInMonths = t.RegistrationDate.Year != DateTime.Now.Year ? 12 :
@@ -39,13 +39,13 @@ namespace KirovTransportTax.Infrastucture.Repositories
                                                                                     12 - t.RegistrationDate.Month + 1
                                  };
             var taxInfo = from ti in transportInfo
-                          from ttr in dbContext.TransportTaxRateDbs.Where(ttr => ti.Type.Equals(ttr.Type)
+                          from ttr in dbContext.TransportTaxRateDbs.Where(ttr => ti.TransportType.Equals(ttr.Type)
                           && ti.Horsepower > ttr.MinHorsepower && 
                           (ttr.MaxHorsepower == 0 || ti.Horsepower <= ttr.MaxHorsepower))
                            select new TransportTax
                            {
                                NumberTransport = ti.NumberTransport,
-                               TransportType = ti.Type,
+                               TransportType = ti.TransportType,
                                Driver = ti.DriverPassport,
                                Horsepower = ti.Horsepower,
                                PeriodInMonths = ti.PeriodInMonths,
@@ -62,7 +62,7 @@ namespace KirovTransportTax.Infrastucture.Repositories
                                 select new
                                 {
                                     t.NumberTransport,
-                                    tm.Type,
+                                    tm.TransportType,
                                     t.DriverPassport,
                                     tm.Horsepower,
                                     PeriodInMonths = t.RegistrationDate.Year != DateTime.Now.Year ? 12 :
@@ -73,13 +73,13 @@ namespace KirovTransportTax.Infrastucture.Repositories
             if (transport == null)
                 return null;
             var taxInfo = from ti in transportInfo
-                          from ttr in dbContext.TransportTaxRateDbs.Where(ttr => ti.Type.Equals(ttr.Type)
+                          from ttr in dbContext.TransportTaxRateDbs.Where(ttr => ti.TransportType.Equals(ttr.Type)
                           && ti.Horsepower > ttr.MinHorsepower &&
                           (ttr.MaxHorsepower == 0 || ti.Horsepower <= ttr.MaxHorsepower))
                           select new TransportTax
                           {
                               NumberTransport = ti.NumberTransport,
-                              TransportType = ti.Type,
+                              TransportType = ti.TransportType,
                               Driver = ti.DriverPassport,
                               Horsepower = ti.Horsepower,
                               PeriodInMonths = ti.PeriodInMonths,

@@ -11,15 +11,13 @@ namespace KirovTransportTax.Infrastucture.Repositories
         private readonly TransportDbConnection dbContext;
         private readonly Mapper mapperFrom = new(new MapperConfiguration(cnf =>
         {
-            cnf.CreateMap<TransportModel, TransportModelDbModel>()
-            .ForMember(nameof(TransportModelDbModel.BrandName), opt => opt.MapFrom(src => src.Brand))
-            .ForMember(nameof(TransportModelDbModel.Type), opt => opt.MapFrom(src => src.TransportType));
+            cnf.CreateMap<TransportModel, TransportModelDbModel>(); 
         }));
         private readonly Mapper mapperTo = new(new MapperConfiguration(cnf =>
         {
             cnf.CreateMap<TransportModelDbModel, TransportModel>()
-            .ForMember(nameof(TransportModel.Brand), opt => opt.MapFrom(src => src.BrandName))
-            .ForMember(nameof(TransportModel.TransportType), opt => opt.MapFrom(src => src.Type));
+            .ForMember(nameof(TransportModel.Brand), opt => opt.MapFrom(src => src.Brand))
+            .ForMember(nameof(TransportModel.TransportType), opt => opt.MapFrom(src => src.TransportType));
         }));
 
         public TransportModelRepository(TransportDbConnection dbContext)
@@ -39,15 +37,7 @@ namespace KirovTransportTax.Infrastucture.Repositories
 
         public async Task<int> Create(TransportModel entity)
         {
-            //var model = mapperFrom.Map<TransportModelDbModel>(entity);
-            var model = new TransportModelDbModel
-            {
-                Model = entity.Model,
-                BrandName = entity.Brand,
-                Horsepower = entity.Horsepower,
-                ReleaseYear = entity.ReleaseYear,
-                Type = entity.TransportType
-            };
+            var model = mapperFrom.Map<TransportModelDbModel>(entity);
             return await dbContext.InsertAsync(model);
         }
 
