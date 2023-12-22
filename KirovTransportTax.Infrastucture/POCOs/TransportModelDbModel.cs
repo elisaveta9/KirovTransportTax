@@ -9,8 +9,10 @@ namespace KirovTransportTax.Infrastucture.POCOs
         public string Model { get; set; }
 
         [Column(Name = "brand"), NotNull]
-        [Association(ThisKey = nameof(BrandName), OtherKey = nameof(BrandDbModel.Name))]
         public string BrandName { get; set; }
+
+        [Association(ThisKey = nameof(BrandName), OtherKey = nameof(BrandDbModel.Name))]
+        public BrandDbModel Brand { get; set; }
 
         [Column(Name = "horsepower"), NotNull]
         public int Horsepower { get; set; }
@@ -19,7 +21,9 @@ namespace KirovTransportTax.Infrastucture.POCOs
         public int ReleaseYear { get; set; }
 
         [Column(Name = "transport_type"), NotNull]
+        public string Type { get; set; }
+
         [Association(ThisKey = nameof(Type), OtherKey = nameof(TransportTypeDbModel.Type))]
-        public string Type { get; set; } 
+        public TransportTypeDbModel TransportType { get; set; }
     }
 }

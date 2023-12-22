@@ -9,14 +9,18 @@ namespace KirovTransportTax.Infrastucture.POCOs
         public string NumberTransport { get; set; }
 
         [Column(Name = "model"), NotNull]
-        [Association(ThisKey = nameof(Model), OtherKey = nameof(TransportModelDbModel.Model))]
         public string Model { get; set; }
+
+        [Association(ThisKey = nameof(Model), OtherKey = nameof(TransportModelDbModel.Model))]
+        public TransportModelDbModel TransportModel { get; set; }
 
         [Column(Name = "registration_date"), NotNull]
         public DateOnly RegistrationDate { get; set; }
 
         [Column(Name = "driver"), NotNull]
-        [Association(ThisKey = nameof(DriverPassport), OtherKey = nameof(DriverDbModel.Passport))]
         public string DriverPassport { get; set; }
+
+        [Association(ThisKey = nameof(DriverPassport), OtherKey = nameof(DriverDbModel.Passport))]
+        public DriverDbModel DriverModel { get; set; }
     }
 }

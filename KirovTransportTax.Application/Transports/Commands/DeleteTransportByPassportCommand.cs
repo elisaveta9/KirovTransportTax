@@ -11,9 +11,9 @@ namespace KirovTransportTax.Application.Transports.Commands
             this.transportRepository = transportRepository;
         }
 
-        public void Execute(string passport)
+        public bool Execute(string passport)
         {
-            transportRepository.DeleteByPassport(passport);
+            return transportRepository.DeleteByPassport(passport).Result != 0;
         }
     }
 }

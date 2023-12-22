@@ -12,9 +12,7 @@ namespace KirovTransportTax.Application.Drivers.Queries
             _driverRepository = driverRepository;
         }
 
-        public IEnumerable<Driver> Execute()
-        {
-            return _driverRepository.GetAll().Result;
-        }
+        public IEnumerable<Driver> Execute() =>
+            _driverRepository.GetAll().Result.ToList();        
     }
 }

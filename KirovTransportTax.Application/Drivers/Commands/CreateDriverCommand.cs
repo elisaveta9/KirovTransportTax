@@ -14,7 +14,7 @@ namespace KirovTransportTax.Application.Drivers.Commands
 
         public bool Execute(Driver driver)
         {
-            return _driverRepository.Create(driver).Result == 1;
+            return _driverRepository.Create(driver).Result != 0;
         }
     }
 }

@@ -12,9 +12,9 @@ namespace KirovTransportTax.Application.TransportModels.Commands
             _transportModelRepository = transportModelRepository;
         }
 
-        public void Execute(TransportModel transportModel) 
+        public bool Execute(TransportModel transportModel) 
         {
-            _transportModelRepository.Delete(transportModel);
+            return _transportModelRepository.Delete(transportModel).Result != 0;
         }
     }
 }

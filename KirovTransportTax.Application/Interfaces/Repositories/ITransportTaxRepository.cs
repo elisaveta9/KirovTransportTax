@@ -1,9 +1,9 @@
-﻿using KirovTransportTax.Core.Entities;
+﻿using KirovTransportTax.Domain.Entities;
 
 namespace KirovTransportTax.Application.Interfaces.Repositories
 {
     public interface ITransportTaxRepository : IRepository<TransportTax>
     {
-        Task<IEnumerable<TransportTax>> GetByNumber(string numberTransportPK);
+        Task<TransportTax?> GetByNumber(string numberTransportPK);
     }
 }

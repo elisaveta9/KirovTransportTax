@@ -11,9 +11,9 @@ namespace KirovTransportTax.Application.Drivers.Commands
             _driverRepository = driverRepository;
         }
 
-        public void Execute(string passport)
+        public bool Execute(string passport)
         {
-            _driverRepository.DeleteByPassport(passport);
+            return _driverRepository.DeleteByPassport(passport).Result != 0;
         }
     }
 }

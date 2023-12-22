@@ -1,4 +1,5 @@
-﻿using KirovTransportTax.Application.Interfaces.Repositories;
+﻿using AutoMapper;
+using KirovTransportTax.Application.Interfaces.Repositories;
 using KirovTransportTax.Domain.Entities;
 
 namespace KirovTransportTax.Application.Drivers.Commands
@@ -12,9 +13,9 @@ namespace KirovTransportTax.Application.Drivers.Commands
             _driverRepository = driverRepository;
         }
 
-        public void Execute(Driver driver)
+        public bool Execute(Driver driver)
         {
-            _driverRepository.Delete(driver);
+            return _driverRepository.Delete(driver).Result != 0;
         }
     }
 }

@@ -9,8 +9,10 @@ namespace KirovTransportTax.Infrastucture.POCOs
         public int Id { get; set; }
 
         [Column(Name = "transport_type"), NotNull]
-        [Association(ThisKey = nameof(Type), OtherKey = nameof(TransportTypeDbModel.Type))]
         public string Type { get; set; }
+
+        [Association(ThisKey = nameof(Type), OtherKey = nameof(TransportTypeDbModel.Type))]
+        public TransportTypeDbModel TransportType { get; set; }
 
         [Column(Name = "min_horsepower"), NotNull]
         public int MinHorsepower { get; set; }

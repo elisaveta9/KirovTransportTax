@@ -12,9 +12,9 @@ namespace KirovTransportTax.Application.Brands.Commands
             _brandRepository = repository;
         }
 
-        public void Execute(Brand brand)
+        public bool Execute(Brand brand)
         {
-            _brandRepository.Delete(brand);
+            return _brandRepository.Delete(brand).Result != 0;
         }
     }
 }

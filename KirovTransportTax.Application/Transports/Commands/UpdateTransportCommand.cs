@@ -12,14 +12,14 @@ namespace KirovTransportTax.Application.Transports.Commands
             this.transportRepository = transportRepository;
         }
 
-        public void Execute(Transport transport) 
+        public bool Execute(Transport transport) 
         {
-            transportRepository.Update(transport);
+            return transportRepository.Update(transport).Result != 0;
         }
 
-        public void Execute(string oldTransportNumber, Transport transport)
+        public bool Execute(string oldTransportNumber, Transport transport)
         {
-            transportRepository.Update(oldTransportNumber, transport);
+            return transportRepository.Update(oldTransportNumber, transport).Result != 0;
         }
     }
 }

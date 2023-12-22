@@ -12,9 +12,9 @@ namespace KirovTransportTax.Application.Transports.Commands
             this.transportRepository = transportRepository;
         }
 
-        public void Execute(Transport transport)
+        public bool Execute(Transport transport)
         {
-            transportRepository.Delete(transport);
+            return transportRepository.Delete(transport).Result != 0;
         }
     }
 }
