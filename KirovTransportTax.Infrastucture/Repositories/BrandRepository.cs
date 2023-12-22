@@ -1,39 +1,66 @@
-﻿using KirovTransportTax.Application.Interfaces;
-using KirovTransportTax.Core.Entities;
+﻿using AutoMapper;
+using KirovTransportTax.Application.Interfaces.Repositories;
+using KirovTransportTax.Domain.Entities;
+using KirovTransportTax.Infrastucture.POCOs;
 using LinqToDB;
 
 namespace KirovTransportTax.Infrastucture.Repositories
 {
     internal class BrandRepository : IBrandRepository
     {
-        private TransportDbConnection dbContext = new TransportDbConnection();
-
-        public Task Create(Brand entity)
+        private readonly TransportDbConnection dbContext;
+        private readonly Mapper mapper = new(new MapperConfiguration(cnf =>
         {
-            dbContext.brandDbs
-                .Value(p => p.Name, entity.Name)
-                .Insert();
-            throw new NotImplementedException();
+            cnf.CreateMap<Driver, DriverDbModel>();
+        }));
+
+        public BrandRepository(TransportDbConnection dbContext)
+        {
+            this.dbContext = dbContext;
         }
 
-        public void Delete(Brand entity)
+        public void BeginTransaction()
         {
-            throw new NotImplementedException();
+            dbContext.BeginTransaction();
         }
 
-        public Task<IEnumerable<Brand>> GetAll()
+        public void CommitTransaction()
         {
-            throw new NotImplementedException();
+            dbContext.CommitTransaction();
         }
 
-        public Task SaveChanges()
+        public async Task<int> Create(Brand entity)
         {
-            throw new NotImplementedException();
+            var model = mapper.Map<BrandDbModel>(entity);
+            var addedRows = await dbContext.BrandDbs
+                .Value(b => b, model)
+                .InsertAsync();
+            return addedRows;
         }
 
-        public void Update(string oldBrandPK, Brand entity)
+        public async void Delete(Brand entity)
         {
-            throw new NotImplementedException();
+            var model = mapper.Map<BrandDbModel>(entity);
+            await dbContext.DeleteAsync(model);
+        }
+
+        public async Task<IEnumerable<Brand>> GetAll()
+        {
+            var brands = await dbContext.BrandDbs.ToListAsync();
+            return brands.ConvertAll(b => mapper.Map<Brand>(b));
+        }
+
+        public void RollbackTransaction()
+        {
+            dbContext.RollbackTransaction();
+        }
+
+        public async void Update(string oldBrandPK, Brand entity)
+        {
+            await dbContext.BrandDbs
+                .Where(b => b.Name.Equals(oldBrandPK))
+                .Set(b => b.Name, entity.Name)
+                .UpdateAsync();
         }
     }
 }
