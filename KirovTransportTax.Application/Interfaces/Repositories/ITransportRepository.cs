@@ -6,8 +6,7 @@ namespace KirovTransportTax.Application.Interfaces.Repositories
     {
         Task<int> Create(Transport entity);
         Task<int> Delete(Transport entity);
-        Task<int> DeleteByNumber(string numberTransporPK);
-        Task<int> DeleteByPassport(string passportFK);
+        Task<int> Delete(string? numberTransporPK, string? passportFK);
         Task<int> Update(Transport entity);
         Task<int> Update(string oldNumberTransporPK, Transport entity);
 

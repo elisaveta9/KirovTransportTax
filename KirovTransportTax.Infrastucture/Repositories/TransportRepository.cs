@@ -54,17 +54,13 @@ namespace KirovTransportTax.Infrastucture.Repositories
             return await dbContext.DeleteAsync(model);
         }
 
-        public async Task<int> DeleteByNumber(string numberTransporPK)
+        public async Task<int> Delete(string? numberTransporPK, string? passportFK)
         {
+            if (String.IsNullOrEmpty(numberTransporPK) && String.IsNullOrEmpty(passportFK))
+                return 0;
             return await dbContext.TransportDb
-                .Where(t => t.NumberTransport.Equals(numberTransporPK))
-                .DeleteAsync();
-        }
-
-        public async Task<int> DeleteByPassport(string passportFK)
-        {
-            return await dbContext.TransportDb
-                .Where(t => t.DriverPassport.Equals(passportFK))
+                .Where(t => (String.IsNullOrEmpty(numberTransporPK) || t.NumberTransport.Equals(numberTransporPK) &&
+                            (String.IsNullOrEmpty(passportFK) || t.DriverPassport.Equals(passportFK))))
                 .DeleteAsync();
         }
 

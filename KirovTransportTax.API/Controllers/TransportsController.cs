@@ -16,8 +16,6 @@ namespace KirovTransportTax.API.Controllers
     {
         private readonly CreateTransportCommand createTransportCommand;
         private readonly DeleteTransportCommand deleteTransportCommand;
-        private readonly DeleteTransportByNumberCommand deleteTransportByNumberCommand;
-        private readonly DeleteTransportByPassportCommand deleteTransportByPassportCommand;
         private readonly UpdateTransportCommand updateTransportCommand;
 
         private readonly GetAllTransportsQuery getAllTransportsQuery;
@@ -37,8 +35,6 @@ namespace KirovTransportTax.API.Controllers
                 createTransportModelCommand,
                 createDriverCommand);
             deleteTransportCommand = new(transportRepository);
-            deleteTransportByNumberCommand = new(transportRepository);
-            deleteTransportByPassportCommand = new(transportRepository);
             updateTransportCommand = new(transportRepository);
 
             getAllTransportsQuery = new(transportRepository);
@@ -108,15 +104,12 @@ namespace KirovTransportTax.API.Controllers
             return BadRequest();
         }
 
-        [HttpDelete("bydetails/")]
+        [HttpDelete("filter/")]
         public IActionResult Delete(string? number, string? passport)
         {
-            IActionResult result = BadRequest();
-            if (number != null && deleteTransportByNumberCommand.Execute(number))
-                result = Ok();
-            if (passport != null && deleteTransportByPassportCommand.Execute(passport))
-                result = Ok();
-            return result;
+            if (deleteTransportCommand.Execute(number, passport)) 
+                return Ok();
+            return BadRequest();
         }
     }
 }
