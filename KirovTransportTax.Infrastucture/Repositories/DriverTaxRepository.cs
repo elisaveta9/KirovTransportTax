@@ -30,6 +30,9 @@ namespace KirovTransportTax.Infrastucture.Repositories
                                 select new
                                 {
                                     t.NumberTransport,
+                                    tm.Brand,
+                                    tm.Model,
+                                    tm.ReleaseYear,
                                     tm.TransportType,
                                     t.DriverPassport,
                                     tm.Horsepower,
@@ -39,27 +42,40 @@ namespace KirovTransportTax.Infrastucture.Repositories
                                 };
             var taxInfo = from ti in transportInfo
                           join ttr in dbContext.TransportTaxRateDbs on ti.TransportType equals ttr.Type
+                          join d in dbContext.DriverDbs on ti.DriverPassport equals d.Passport
                           where (ti.Horsepower > ttr.MinHorsepower &&
                           (ttr.MaxHorsepower == null || ti.Horsepower <= ttr.MaxHorsepower))
                           select new TransportTax
                           {
+                              DriverPassport = ti.DriverPassport,
+                              DriverLastname = d.LastName,
+                              DriverName = d.Name,
+                              DriverPatronymic = d.Patronymic,
+                              DriverBirthday = d.Birthday,
                               NumberTransport = ti.NumberTransport,
+                              Brand = ti.Brand,
+                              Model = ti.Model,
                               TransportType = ti.TransportType,
-                              Driver = ti.DriverPassport,
+                              AgeTransport = DateTime.Now.Year - ti.ReleaseYear,
                               Horsepower = ti.Horsepower,
                               PeriodInMonths = ti.PeriodInMonths,
                               TaxRate = ttr.TaxRate,
                               Tax = (float)Math.Round((double)ttr.TaxRate * ti.Horsepower * ti.PeriodInMonths / 12, 4)
                           };
             var taxDriver = from ti in taxInfo
-                            group ti by ti.Driver into td
+                            group ti by ti.DriverPassport into td
                             orderby td.Sum(t => t.Tax)
                             select new DriverTax
                             {
                                 DriverPassport = td.Key,
+                                DriverLastname = td.First().DriverLastname,
+                                DriverName = td.First().DriverName,
+                                DriverPatronymic = td.First().DriverPatronymic,
+                                DriverBirthday = td.First().DriverBirthday,
+                                CountTransport = td.Count(),
                                 SumTax = td.Sum(t => t.Tax)
                             };
-            return taxDriver;
+            return taxDriver.OrderByDescending(td => td.SumTax).OrderByDescending(td => td.SumTax);
         }
 
         public async Task<DriverTax?> GetByPassport(string passport)
@@ -69,6 +85,9 @@ namespace KirovTransportTax.Infrastucture.Repositories
                                 select new
                                 {
                                     t.NumberTransport,
+                                    tm.Brand,
+                                    tm.Model,
+                                    tm.ReleaseYear,
                                     tm.TransportType,
                                     t.DriverPassport,
                                     tm.Horsepower,
@@ -80,24 +99,37 @@ namespace KirovTransportTax.Infrastucture.Repositories
                 return null;
             var taxInfo = from ti in transportInfo
                           join ttr in dbContext.TransportTaxRateDbs on ti.TransportType equals ttr.Type
+                          join d in dbContext.DriverDbs on ti.DriverPassport equals d.Passport
                           where (ti.Horsepower > ttr.MinHorsepower &&
                           (ttr.MaxHorsepower == null || ti.Horsepower <= ttr.MaxHorsepower))
                           select new TransportTax
                           {
+                              DriverPassport = ti.DriverPassport,
+                              DriverLastname = d.LastName,
+                              DriverName = d.Name,
+                              DriverPatronymic = d.Patronymic,
+                              DriverBirthday = d.Birthday,
                               NumberTransport = ti.NumberTransport,
+                              Brand = ti.Brand,
+                              Model = ti.Model,
                               TransportType = ti.TransportType,
-                              Driver = ti.DriverPassport,
+                              AgeTransport = DateTime.Now.Year - ti.ReleaseYear,
                               Horsepower = ti.Horsepower,
                               PeriodInMonths = ti.PeriodInMonths,
                               TaxRate = ttr.TaxRate,
                               Tax = (float)Math.Round((double)ttr.TaxRate * ti.Horsepower * ti.PeriodInMonths / 12, 4)
                           };
             var taxDriver = from ti in taxInfo
-                            group ti by ti.Driver into td
+                            group ti by ti.DriverPassport into td
                             orderby td.Sum(t => t.Tax)
                             select new DriverTax
                             {
                                 DriverPassport = td.Key,
+                                DriverLastname = td.First().DriverLastname,
+                                DriverName = td.First().DriverName,
+                                DriverPatronymic = td.First().DriverPatronymic,
+                                DriverBirthday = td.First().DriverBirthday,
+                                CountTransport = td.Count(),
                                 SumTax = td.Sum(t => t.Tax)
                             };
             return await taxDriver.FirstOrDefaultAsync();

@@ -28,25 +28,36 @@ namespace KirovTransportTax.Infrastucture.Repositories
             var tr = dbContext.TransportTaxRateDbs.ToList();
             var transportInfo = from t in dbContext.TransportDb
                                 from tm in dbContext.TransportModelDbs.Where(tm => t.Model.Equals(tm.Model))
-                                 select new
-                                 {
-                                     t.NumberTransport,
-                                     tm.TransportType,
-                                     t.DriverPassport,
-                                     tm.Horsepower,
-                                     PeriodInMonths = t.RegistrationDate.Year != DateTime.Now.Year ? 12 :
-                                                      t.RegistrationDate.Day > 15 ? 12 - t.RegistrationDate.Month :
-                                                                                    12 - t.RegistrationDate.Month + 1
-                                 };
+                                select new
+                                {
+                                    t.NumberTransport,
+                                    tm.Brand,
+                                    tm.Model,
+                                    tm.ReleaseYear,
+                                    tm.TransportType,
+                                    t.DriverPassport,
+                                    tm.Horsepower,
+                                    PeriodInMonths = t.RegistrationDate.Year != DateTime.Now.Year ? 12 :
+                                                    t.RegistrationDate.Day > 15 ? 12 - t.RegistrationDate.Month :
+                                                                                  12 - t.RegistrationDate.Month + 1
+                                };
             var taxInfo = from ti in transportInfo
                           join ttr in dbContext.TransportTaxRateDbs on ti.TransportType equals ttr.Type
+                          join d in dbContext.DriverDbs on ti.DriverPassport equals d.Passport
                           where (ti.Horsepower > ttr.MinHorsepower &&
                           (ttr.MaxHorsepower == null || ti.Horsepower <= ttr.MaxHorsepower))
                            select new TransportTax
                            {
+                               DriverPassport = ti.DriverPassport,
+                               DriverLastname = d.LastName,
+                               DriverName = d.Name,
+                               DriverPatronymic = d.Patronymic,
+                               DriverBirthday = d.Birthday,
                                NumberTransport = ti.NumberTransport,
+                               Brand = ti.Brand,
+                               Model = ti.Model,
                                TransportType = ti.TransportType,
-                               Driver = ti.DriverPassport,
+                               AgeTransport = DateTime.Now.Year - ti.ReleaseYear,
                                Horsepower = ti.Horsepower,
                                PeriodInMonths = ti.PeriodInMonths,
                                TaxRate = ttr.TaxRate,
@@ -62,6 +73,9 @@ namespace KirovTransportTax.Infrastucture.Repositories
                                 select new
                                 {
                                     t.NumberTransport,
+                                    tm.Brand,
+                                    tm.Model,
+                                    tm.ReleaseYear,
                                     tm.TransportType,
                                     t.DriverPassport,
                                     tm.Horsepower,
@@ -74,13 +88,21 @@ namespace KirovTransportTax.Infrastucture.Repositories
                 return null;
             var taxInfo = from ti in transportInfo
                           join ttr in dbContext.TransportTaxRateDbs on ti.TransportType equals ttr.Type
+                          join d in dbContext.DriverDbs on ti.DriverPassport equals d.Passport
                           where (ti.Horsepower > ttr.MinHorsepower &&
                           (ttr.MaxHorsepower == null || ti.Horsepower <= ttr.MaxHorsepower))
                           select new TransportTax
                           {
+                              DriverPassport = ti.DriverPassport,
+                              DriverLastname = d.LastName,
+                              DriverName = d.Name,
+                              DriverPatronymic = d.Patronymic,
+                              DriverBirthday = d.Birthday,
                               NumberTransport = ti.NumberTransport,
+                              Brand = ti.Brand,
+                              Model = ti.Model,
                               TransportType = ti.TransportType,
-                              Driver = ti.DriverPassport,
+                              AgeTransport = DateTime.Now.Year - ti.ReleaseYear,
                               Horsepower = ti.Horsepower,
                               PeriodInMonths = ti.PeriodInMonths,
                               TaxRate = ttr.TaxRate,
