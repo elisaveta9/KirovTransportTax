@@ -101,6 +101,66 @@ CREATE TABLE IF NOT EXISTS public.transport
 
 ## 2. Разработать WebApi для получения/добавления/изменения информации о марках, моделях, водителях, автомобилях.
 
+![Swagger-UI-Google-Chrome-2023-12-25-02-33-41 (2) (1)](https://github.com/elisaveta9/KirovTransportTax/assets/89607033/6c0cd77d-ecf9-433d-ba8c-54d946ce2319)
+*Все действия, которые выполняет WebApi*
 
-   
+### Водители
+#### Получение информации
+![https___localhost_7055_Drivers-My-Workspace-2023-12-25-03-37-49 (1)](https://github.com/elisaveta9/KirovTransportTax/assets/89607033/d55a7b52-ef5b-4ae4-b31d-0d02f52322f0)
+
+*Получение информации обо всех водителях*
+
+![image](https://github.com/elisaveta9/KirovTransportTax/assets/89607033/0ae8c66f-1172-4888-868d-1e514e6fea00)
+
+*Получение информации о водетеле по паспорту. (%20 - пробел).*
+
+#### Создание записи о новом водетеле
+
+![image](https://github.com/elisaveta9/KirovTransportTax/assets/89607033/6bebae58-bf20-44d1-8f56-5a075e3bee96)
+
+*Ошибка при добавлении записи с неправльно введенной датой.*
+
+![image](https://github.com/elisaveta9/KirovTransportTax/assets/89607033/8429c0d5-5029-402e-99f1-3299dbe94bc4)
+
+*Ошибка при добавлении водителя с неправильно введенным паспортом.*
+
+![image](https://github.com/elisaveta9/KirovTransportTax/assets/89607033/77a363c2-3704-4c78-a50b-77ce450f6ee3)
+
+*Ошибка при добавлении водителя с паспортом, который уже есть в бд.*
+
+![image](https://github.com/elisaveta9/KirovTransportTax/assets/89607033/ff61fd25-87dd-47b4-9399-8dd31c32cded)
+
+*Ответ на правильное добавление водителя.*
+
+#### Изменение записи водителя
+
+![image](https://github.com/elisaveta9/KirovTransportTax/assets/89607033/708cdea5-9526-42cd-bb30-514c1278dc63)
+
+![image](https://github.com/elisaveta9/KirovTransportTax/assets/89607033/4111d4a1-08b0-47c8-a527-5833e3667b74)
+
+*Корректное изменение записи.*
+
+![image](https://github.com/elisaveta9/KirovTransportTax/assets/89607033/28e15f2c-2d7a-439e-be63-dda192e051ab)
+
+*Не найдена запись с таким паспортом для изменения.*
+
+Если будет введена дата неправильно или паспорт (если указан корректный старый паспорт), то ответ будет таким же как и при создании записи с этими атрибутами.
+
+#### Удаление записи водителя
+
+![image](https://github.com/elisaveta9/KirovTransportTax/assets/89607033/6327040d-48a9-47f7-b955-b1f60c8ddc40)
+
+*Удаление водителя с полной информацией.*
+
+![image](https://github.com/elisaveta9/KirovTransportTax/assets/89607033/b354d95a-6653-490a-8aa6-d11a8213e3e9)
+
+*Удаление водителя по паспорту.*   
+
+![image](https://github.com/elisaveta9/KirovTransportTax/assets/89607033/75b293da-535c-44ca-95df-98245331c115)
+
+*Удаление несуществующей записи.*
+
+### Бренд машины
+
+
 ## 3. Разработать WebApi для получения отчета. Построение отчета в табличном виде: водитель, автомобиль, возраст авто, л.с., сумма налога, сортировка по сумме налога (по убыванию).
