@@ -37,10 +37,10 @@ namespace KirovTransportTax.API.Controllers
             {
                 if (createDriverCommand.Execute(driver))
                     return Ok(driver);
-                return Ok();
-            } catch
+                return BadRequest($"Already exsist raw with passport {driver.Passport}");
+            } catch (Exception ex)
             {
-                return BadRequest();
+                return BadRequest(ex.Message);
             }
         }
 

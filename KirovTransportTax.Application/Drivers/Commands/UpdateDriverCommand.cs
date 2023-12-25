@@ -15,7 +15,7 @@ namespace KirovTransportTax.Application.Drivers.Commands
 
         public bool Execute(Driver driver)
         {
-            return _driverRepository.Delete(driver).Result != 0;
+            return _driverRepository.Update(driver).Result != 0;
         }
 
         public bool Execute(string oldPssport, Driver driver)
